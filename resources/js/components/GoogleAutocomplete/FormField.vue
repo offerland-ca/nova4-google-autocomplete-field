@@ -14,7 +14,9 @@
             v-model="value"
             onfocus="this.setAttribute('data-1p-ignore', true);"
             v-on:keypress.enter.prevent=""
-            v-on:placechanged="getAddressData">
+            v-on:placechanged="getAddressData"
+            v-on:focusout="validate"
+            >
         </vue-google-autocomplete>
         <button type="button" class="rounded bg-primary-500 ml-2 text-white px-3" @click="getCurrentLocation"
                 v-if="this.field.currentLocationButton">
@@ -82,6 +84,10 @@ export default {
         }
       })
     },
+    validate() {
+      console.log('i am here');
+    },
+
     /**
      * Get address
      */
