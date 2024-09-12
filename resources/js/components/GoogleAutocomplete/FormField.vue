@@ -13,7 +13,9 @@
             :types="this.field.type"
             v-model="value"
             v-on:keypress.enter.prevent=""
-            v-on:placechanged="getAddressData">
+            v-on:placechanged="getAddressData"
+            v-on:focusout="validate"
+            >
         </vue-google-autocomplete>
         <button type="button" class="rounded bg-primary-500 ml-2 text-white px-3" @click="getCurrentLocation" v-if="this.field.currentLocationButton">
           <span class="flex justify-center items-center" v-if="loadingCurrentLocation">
@@ -69,6 +71,10 @@ export default {
   },
 
   methods: {
+    validate() {
+      console.log('i am here');
+    },
+
     getCurrentLocation() {
       this.loadingCurrentLocation = true;
       this.$refs.address.geolocate();
