@@ -169,9 +169,28 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     }
   },
   methods: {
-    validate: function validate() {
-      if (this.field.validationEndpoint) {
+    validate: function validate(event) {
+      var _this = this;
+      console.log(event);
+      this.validationError = null;
+      if (this.field.validationEndpoint && event) {
         console.log("Going to call ".concat(this.field.validationEndpoint));
+        this.validationError = "Doing validation...";
+        Nova.request().get(this.field.validationEndpoint, {
+          params: {
+            input: event,
+            name: this.field.name
+          }
+        }).then(function (response) {
+          if (response.data.exists) {
+            _this.validationError = "".concat(_this.field.name, " already exists");
+          } else {
+            console.debug("".concat(_this.field.name, " does not exist"));
+            _this.validationError = null;
+          }
+        })["catch"](function (error) {
+          _this.validationError = "An error occurred during validation: ".concat(error);
+        });
       }
     },
     getCurrentLocation: function getCurrentLocation() {
@@ -228,6 +247,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
      */
     handleChange: function handleChange(value) {
       this.value = value;
+      this.validate(value);
     }
   }
 });
@@ -400,6 +420,10 @@ var _hoisted_5 = {
   key: 1,
   "class": "help-text error-text mt-2 text-danger"
 };
+var _hoisted_6 = {
+  key: 2,
+  "class": "help-text error-text mt-2 text-danger"
+};
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _this = this;
   var _component_vue_google_autocomplete = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("vue-google-autocomplete");
@@ -420,9 +444,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           return _ctx.value = $event;
         }),
         onKeypress: _cache[1] || (_cache[1] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withKeys)((0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {}, ["prevent"]), ["enter"])),
-        onPlacechanged: $options.getAddressData,
-        onFocusout: $options.validate
-      }, null, 8 /* PROPS */, ["id", "class", "placeholder", "country", "types", "modelValue", "onPlacechanged", "onFocusout"]), _this.field.currentLocationButton ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+        onPlacechanged: $options.getAddressData
+      }, null, 8 /* PROPS */, ["id", "class", "placeholder", "country", "types", "modelValue", "onPlacechanged"]), _this.field.currentLocationButton ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
         key: 0,
         type: "button",
         "class": "rounded bg-primary-500 ml-2 text-white px-3",
@@ -433,7 +456,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         "class": "spin-load ease-linear rounded-full border-2 border-t-2 border-white"
       }, null, -1 /* HOISTED */)]))) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("svg", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. "), _cache[4] || (_cache[4] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
         d: "M176 256C176 211.8 211.8 176 256 176C300.2 176 336 211.8 336 256C336 300.2 300.2 336 256 336C211.8 336 176 300.2 176 256zM256 0C273.7 0 288 14.33 288 32V66.65C368.4 80.14 431.9 143.6 445.3 224H480C497.7 224 512 238.3 512 256C512 273.7 497.7 288 480 288H445.3C431.9 368.4 368.4 431.9 288 445.3V480C288 497.7 273.7 512 256 512C238.3 512 224 497.7 224 480V445.3C143.6 431.9 80.14 368.4 66.65 288H32C14.33 288 0 273.7 0 256C0 238.3 14.33 224 32 224H66.65C80.14 143.6 143.6 80.14 224 66.65V32C224 14.33 238.3 0 256 0zM128 256C128 326.7 185.3 384 256 384C326.7 384 384 326.7 384 256C384 185.3 326.7 128 256 128C185.3 128 128 185.3 128 256z"
-      }, null, -1 /* HOISTED */))]))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), _ctx.value != '' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("p", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.translate.current_address) + ": " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.value), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.hasError ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("p", _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.firstError), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)];
+      }, null, -1 /* HOISTED */))]))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), _ctx.value != '' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("p", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.translate.current_address) + ": " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.value), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.validationError ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("p", _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.validationError), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.hasError ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("p", _hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.firstError), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)];
     }),
     _: 1 /* STABLE */
   }, 8 /* PROPS */, ["field"])], 2112 /* STABLE_FRAGMENT, DEV_ROOT_FRAGMENT */);

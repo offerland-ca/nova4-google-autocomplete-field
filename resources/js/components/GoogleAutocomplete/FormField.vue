@@ -14,7 +14,6 @@
             v-model="value"
             v-on:keypress.enter.prevent=""
             v-on:placechanged="getAddressData"
-            v-on:focusout="validate"
             >
         </vue-google-autocomplete>
         <button type="button" class="rounded bg-primary-500 ml-2 text-white px-3" @click="getCurrentLocation" v-if="this.field.currentLocationButton">
@@ -30,6 +29,10 @@
       </div>
 
       <p v-if="value != ''" class="my-2 text-success">{{ translate.current_address }}: {{ value }}</p>
+
+      <p v-if="validationError" class="help-text error-text mt-2 text-danger">
+        {{ validationError }}
+      </p>
 
       <p v-if="hasError" class="help-text error-text mt-2 text-danger">
         {{ firstError }}
@@ -71,9 +74,31 @@ export default {
   },
 
   methods: {
-    validate() {
-      if (this.field.validationEndpoint) {
+    validate(event) {
+      console.log(event);
+      this.validationError = null;
+
+      if (this.field.validationEndpoint && event) {
         console.log(`Going to call ${this.field.validationEndpoint}`);
+
+        Nova.request()
+          .get(this.field.validationEndpoint, {
+            params: {
+              input: event,
+              name: this.field.name,
+            },
+          })
+          .then((response) => {
+            if (response.data.exists) {
+              this.validationError = `${this.field.name} already exists`;
+            } else {
+              console.debug(`${this.field.name} does not exist`);
+              this.validationError = null;
+            }
+          })
+          .catch((error) => {
+            this.validationError = `An error occurred during validation: ${error}`;
+          });
       }
     },
 
@@ -138,7 +163,8 @@ export default {
      * Update the field's internal value.
      */
     handleChange(value) {
-      this.value = value
+      this.value = value;
+      this.validate(value);
     }
   }
 }
