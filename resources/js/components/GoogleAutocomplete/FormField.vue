@@ -85,7 +85,9 @@ export default {
       })
     },
     validate() {
-      console.log('i am here');
+      if (this.field.validationEndpoint) {
+        console.log(`Going to call ${this.field.validationEndpoint}`);
+      }
     },
 
     /**
