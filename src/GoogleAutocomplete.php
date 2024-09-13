@@ -46,6 +46,13 @@ class GoogleAutocomplete extends Field
         ]);
     }
 
+    public function withValidation(string $url): GoogleAutocomplete
+    {
+        return $this->withMeta([
+            'validationEndpoint' => $url,
+        ]);
+    }
+
     /**
      * Pass a country codes array
      *
