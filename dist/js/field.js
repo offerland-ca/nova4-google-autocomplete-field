@@ -175,7 +175,6 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       this.validationError = null;
       if (this.field.validationEndpoint && event) {
         console.log("Going to call ".concat(this.field.validationEndpoint));
-        this.validationError = "Doing validation...";
         Nova.request().get(this.field.validationEndpoint, {
           params: {
             input: event,
