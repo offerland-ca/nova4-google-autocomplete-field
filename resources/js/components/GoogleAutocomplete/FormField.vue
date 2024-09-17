@@ -101,13 +101,13 @@ export default {
     validate(event) {
       console.log(event);
 
-      if (this.field.validationEndpoint && event) {
+      if (this.field.validationEndpoint && this.value) {
         console.log(`Going to call ${this.field.validationEndpoint}`);
 
         Nova.request()
           .get(this.field.validationEndpoint, {
             params: {
-              input: event,
+              input: this.value,
               name: this.field.name,
             },
           })
@@ -183,7 +183,6 @@ export default {
      */
     handleChange(value) {
       this.value = value;
-      this.validate(value);
     },
   },
 };
