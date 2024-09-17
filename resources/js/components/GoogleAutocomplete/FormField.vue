@@ -76,6 +76,7 @@ export default {
     return {
       address: "",
       loadingCurrentLocation: false,
+      validationError: null,
     };
   },
 
